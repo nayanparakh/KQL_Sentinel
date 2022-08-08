@@ -1,0 +1,18 @@
+#For a usecase if admin need to genarate in specfic time period or after office hour
+Event
+| where TimeGenerated > ago(7d)
+| extend hour = datetime_part("hour", TimeGenerated)
+| extend dayofmonth = datetime_part("Day", TimeGenerated)
+| extend dayofweek = toint(format_timespan(dayofweek(TimeGenerated), 'd'))
+| extend dayname = case (dayofweek == 0, "Sunday",
+    dayofweek == 1, "Monday",
+    dayofweek == 2, "Tuesday",
+    dayofweek == 3, "Wednesday",
+    dayofweek == 4, "Thursday",
+    dayofweek == 5, "Firday",
+    dayofweek == 6, "Saturday",
+    "unknown")
+| where hourofday(TimeGenerated) !between (6 .. 18)
+    or dayofweek == 0
+    or dayofweek == 6
+| where RawData contains "deleting oij proxies"

@@ -1,4 +1,5 @@
-// USecase is used if someone is looking for alerting for a specfic time range
+// USecase is used if someone is looking for alerting for a specfic time range.
+//Ref: https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/dayofweekfunction
 Tablename
 | where TimeGenerated > ago(7d)
 | extend hour = datetime_part("hour", TimeGenerated)

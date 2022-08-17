@@ -1,0 +1,17 @@
+// USecase is used if someone is looking for alerting for a specfic time range
+Tablename
+| where TimeGenerated > ago(7d)
+| extend hour = datetime_part("hour", TimeGenerated)
+| extend dayofmonth = datetime_part("Day", TimeGenerated)
+| extend dayofweek = toint(format_timespan(dayofweek(TimeGenerated), 'd'))
+| extend dayname = case (dayofweek == 0, "Sunday",
+    dayofweek == 1, "Monday",
+    dayofweek == 2, "Tuesday",
+    dayofweek == 3, "Wednesday",
+    dayofweek == 4, "Thursday",
+    dayofweek == 5, "Firday",
+    dayofweek == 6, "Saturday",
+    "unknown")
+| where hourofday(TimeGenerated) !between (6 .. 18)// Off business hour time
+    or dayofweek == 0
+    or dayofweek == 6
